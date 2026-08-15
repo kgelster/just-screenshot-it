@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: page grows during the lazy-load pre-pass</title>
+<link rel="stylesheet" href="fixture.css">
+</head>
+<body>
+<p class="note">
+  This page starts at 1500px and appends bands as you scroll, up to a hard stop
+  at 40 bands (4000px). Measuring before the pre-pass would plan for 1500px and
+  truncate; measuring after must plan for 4000px.
+</p>
+<div id="main"></div>
+<script type="module">
+  import { bands } from './fixture.js';
+  const main = document.getElementById('main');
+  let count = 0;
+  const LIMIT = 40;
+  const grow = () => {
+    if (count >= LIMIT) return;
+    const add = Math.min(5, LIMIT - count);
+    bands(main, add, count);
+    count += add;
+  };
+  for (let i = 0; i < 3; i += 1) grow();
+  addEventListener('scroll', () => {
+    if (scrollY + innerHeight > document.documentElement.scrollHeight - 400) grow();
+  }, { passive: true });
+  document.title = 'lazy-grow | expected height 4000 + note';
+</script>
+</body>
+</html>

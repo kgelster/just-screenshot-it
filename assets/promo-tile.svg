@@ -1,0 +1,45 @@
+<!--
+  Chrome Web Store small promo tile, 440x280.
+
+  The tile is shown at roughly a third of this size in store listings and
+  category rows, so it carries the mark, the name, and one line. Anything more
+  is unreadable at display size. Same three colours as the icon set, and the
+  same idea: a page taller than its frame, one arrow, no gradients.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280" width="440" height="280">
+  <defs>
+    <clipPath id="tile">
+      <rect x="0" y="0" width="440" height="280" />
+    </clipPath>
+    <clipPath id="markFrame">
+      <rect x="36" y="60" width="140" height="160" rx="18" ry="18" />
+    </clipPath>
+  </defs>
+
+  <rect x="0" y="0" width="440" height="280" fill="#171B2B" />
+
+  <g clip-path="url(#tile)">
+    <!-- The mark, enlarged: page bleeding past the frame, one arrow. -->
+    <rect x="36" y="60" width="140" height="160" rx="18" ry="18" fill="#202638" />
+    <g clip-path="url(#markFrame)">
+      <rect x="70" y="48" width="72" height="184" rx="6" ry="6" fill="#F4F6FB" />
+      <g fill="#C6CEDD">
+        <rect x="81" y="70" width="50" height="6" rx="3" />
+        <rect x="81" y="83" width="37" height="6" rx="3" />
+        <rect x="81" y="187" width="50" height="6" rx="3" />
+        <rect x="81" y="200" width="33" height="6" rx="3" />
+      </g>
+      <g fill="#4C8DFF">
+        <rect x="97" y="104" width="18" height="34" />
+        <path d="M79 130 H133 L106 172 Z" />
+      </g>
+    </g>
+
+    <text x="208" y="126" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          font-size="38" font-weight="700" fill="#F4F6FB" letter-spacing="-0.6">Just</text>
+    <text x="208" y="168" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          font-size="38" font-weight="700" fill="#F4F6FB" letter-spacing="-0.6">Screenshot It</text>
+    <text x="208" y="204" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          font-size="17" font-weight="500" fill="#AEB8CC">The whole page, one image.</text>
+  </g>
+</svg>

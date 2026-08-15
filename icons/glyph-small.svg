@@ -1,0 +1,25 @@
+<!--
+  fullpage-shot toolbar glyph, small variant. Rasterised to 32 and 16.
+
+  Same two colours and the same construction as glyph.svg, with the text lines
+  removed, the stroke thickened from 9 to 11, and the page widened to use the
+  edges. At 16 pixels an 8-unit text line is a smear and the outline is only
+  1.4 pixels wide, so everything that is left has to be as large as the frame
+  allows.
+
+  See glyph.svg for why this is one theme-proof drawing rather than a light
+  set and a dark set, and for the contrast measurements behind both colours.
+
+  Drawn on the same 128 grid so the two files can be compared shape for shape.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect
+    x="18" y="8" width="92" height="112" rx="14" ry="14"
+    fill="none" stroke="#6B7A99" stroke-width="11"
+  />
+
+  <g fill="#3A7DF5">
+    <rect x="54" y="32" width="20" height="40" />
+    <path d="M34 68 H94 L64 108 Z" />
+  </g>
+</svg>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: position:fixed inside a transformed ancestor</title>
+<link rel="stylesheet" href="fixture.css">
+<style>
+  /* A transform on an ancestor makes it the containing block for a fixed
+     descendant, so .trapped scrolls with the page. Hiding it because its
+     computed position reads "fixed" would delete real content. */
+  .transformed { transform: translateZ(0); position: relative; }
+  .trapped {
+    background: #c0392b; color: #fff; font: 600 18px/40px sans-serif;
+    left: 24px; padding: 0 16px; position: fixed; top: 1200px;
+  }
+  .really-fixed {
+    background: #1f2430; color: #fff; font: 600 16px/36px sans-serif;
+    padding: 0 16px; position: fixed; right: 24px; top: 16px; z-index: 60;
+  }
+</style>
+</head>
+<body>
+<div class="really-fixed">really fixed &mdash; ONCE only</div>
+<div class="transformed">
+  <div class="trapped">trapped fixed &mdash; must appear at 1200px, not hidden</div>
+  <main id="main"></main>
+</div>
+<script type="module">
+  import { bands } from './fixture.js';
+  bands(document.getElementById('main'), 30);
+  document.title = 'fixed-in-transform | expected height 3000';
+</script>
+</body>
+</html>

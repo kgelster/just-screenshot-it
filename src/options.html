@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Just Screenshot It settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="masthead">
+        <!-- The glyph, not the tile: the tile's #171B2B ground is the same
+             colour as this page's surface in dark mode, so it would sit here
+             as a dark smudge. The glyph is drawn to survive any ground. -->
+        <img class="masthead__icon" src="../icons/glyph128.png" alt="" width="36" height="36" />
+        <div class="masthead__text">
+          <h1>Just Screenshot It</h1>
+          <p class="masthead__sub">Capture settings. Changes save automatically.</p>
+        </div>
+        <!-- Filled from chrome.commands.getAll(): the binding Chrome actually
+             holds, not the one the manifest suggested. A collision leaves the
+             command unassigned and says nothing about it. -->
+        <div class="shortcut" id="shortcut"></div>
+      </header>
+
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+
+      <section class="card" aria-labelledby="h-output">
+        <h2 class="card__title" id="h-output">Output</h2>
+
+        <div class="composer">
+          <label class="composer__label" for="filenameTemplate">Filename</label>
+          <p class="composer__desc">
+            Use <code>/</code> to create folders inside Downloads.
+          </p>
+          <input
+            id="filenameTemplate"
+            class="composer__input"
+            type="text"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            aria-describedby="filenamePreview"
+          />
+
+          <div class="presets" id="presets" role="group" aria-label="Filename presets"></div>
+          <div class="chips" id="tokenChips"></div>
+
+          <!-- Live, and computed by the same `buildFilename` the download uses.
+               A preview written twice is a preview that can lie. -->
+          <output class="preview" id="filenamePreview" for="filenameTemplate"></output>
+          <p class="notice notice--warn" id="filenameWarn" hidden></p>
+        </div>
+
+        <div class="rows">
+          <!-- role="radiogroup" rather than fieldset/legend. Both give the group
+               a name and a role; a legend cannot be placed by CSS grid, because
+               Chrome renders it outside the fieldset's anonymous content box, so
+               a fieldset here would cost the row layout for no semantic gain. -->
+          <div class="row" role="radiogroup" aria-labelledby="formatLabel">
+            <span class="row__label" id="formatLabel">Image format</span>
+            <p class="row__desc">PNG is lossless. JPEG is smaller on photographic pages.</p>
+            <div class="row__control seg">
+              <label class="seg__opt">
+                <input type="radio" name="format" value="png" />
+                <span>PNG</span>
+              </label>
+              <label class="seg__opt">
+                <input type="radio" name="format" value="jpeg" />
+                <span>JPEG</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="row__label" for="jpegQuality">JPEG and fallback quality</label>
+            <p class="row__desc">
+              Used for JPEG output, and on PNG runs for any single frame too large
+              to pass between extension contexts.
+            </p>
+            <div class="row__control slider">
+              <input id="jpegQuality" class="slider__input" type="range" />
+              <output class="slider__value" id="jpegQualityValue" for="jpegQuality"></output>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="row__label" for="download">Save to Downloads</label>
+            <p class="row__desc">Writes the file using the name above.</p>
+            <label class="row__control switchbox">
+              <input id="download" class="switch" type="checkbox" />
+            </label>
+          </div>
+
+          <div class="row">
+            <label class="row__label" for="copyToClipboard">Copy to clipboard</label>
+            <p class="row__desc">Puts the image on the clipboard, ready to paste.</p>
+            <label class="row__control switchbox">
+              <input id="copyToClipboard" class="switch" type="checkbox" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Where the last capture actually landed. Chrome can quietly save a
+             download under a name nobody asked for, and without this the only
+             way to find out is the service worker console. -->
+        <p class="lastcapture" id="lastCapture" hidden></p>
+
+        <p class="notice notice--warn" id="destinationWarn" hidden>
+          <span class="notice__icon" aria-hidden="true">!</span>
+          At least one destination has to stay on, or a capture runs and produces
+          nothing.
+        </p>
+      </section>
+
+      <section class="card" aria-labelledby="h-capture">
+        <h2 class="card__title" id="h-capture">Capture behaviour</h2>
+
+        <div class="rows">
+          <div class="row">
+            <label class="row__label" for="prePass">Lazy-load pre-pass</label>
+            <p class="row__desc">
+              Scrolls the page once before measuring so lazy images load. Turn off
+              for pages that grow forever.
+            </p>
+            <label class="row__control switchbox">
+              <input id="prePass" class="switch" type="checkbox" />
+            </label>
+          </div>
+
+          <div class="row">
+            <label class="row__label" for="overlayPolicy">Full-screen overlays</label>
+            <p class="row__desc">
+              Removing them can also remove pages whose main content is a dialog.
+            </p>
+            <div class="row__control">
+              <select id="overlayPolicy" class="select">
+                <option value="keep">Keep where it sits</option>
+                <option value="strip">Strip from every frame</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <details class="adv">
+          <summary class="adv__summary">Advanced</summary>
+          <div class="rows">
+            <div class="row">
+              <label class="row__label" for="settleMs">Settle delay</label>
+              <p class="row__desc">Extra time after each scroll for sticky elements to repaint.</p>
+              <div class="row__control field">
+                <input id="settleMs" class="num" type="number" inputmode="numeric" />
+                <span class="field__unit" aria-hidden="true">ms</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="row__label" for="captureIntervalMs">Capture interval</label>
+              <p class="row__desc">
+                Higher values slow the capture down. Chrome caps captures at two
+                per second, so below 500&nbsp;ms you only hit retries.
+              </p>
+              <div class="row__control field">
+                <input id="captureIntervalMs" class="num" type="number" inputmode="numeric" />
+                <span class="field__unit" aria-hidden="true">ms</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="row__label" for="pixelBudget">Pixel budget</label>
+              <p class="row__desc" id="pixelBudgetDesc">
+                Lower values use less memory but downscale tall pages sooner.
+              </p>
+              <div class="row__control field">
+                <input
+                  id="pixelBudget"
+                  class="num"
+                  type="number"
+                  inputmode="decimal"
+                  aria-describedby="pixelBudgetDesc"
+                />
+                <span class="field__unit" aria-hidden="true">MP</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <footer class="footer">
+        <button id="reset" class="btn" type="button">Restore defaults</button>
+      </footer>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

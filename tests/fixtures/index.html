@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fullpage-shot capture fixtures</title>
+<style>
+  body { font: 15px/1.6 -apple-system, BlinkMacSystemFont, sans-serif;
+         margin: 3rem auto; max-width: 44rem; padding: 0 1.5rem; }
+  h1 { font-size: 1.3rem; }
+  li { margin-bottom: .6rem; }
+  code { background: rgba(128,128,128,.15); border-radius: 3px; padding: .1em .3em; }
+</style>
+</head>
+<body>
+<h1>fullpage-shot capture fixtures</h1>
+<p>Serve this directory with <code>python3 -m http.server 8777</code> and capture
+each page. Every band is exactly 100&nbsp;px tall and labelled with its index, so
+a duplicated, missing, or torn band is visible at a glance.</p>
+<ul>
+  <li><a href="sticky.html">sticky.html</a> &mdash; sticky header, sticky footer, and a
+      sticky section with an absolutely positioned child. Each must appear exactly
+      once. Expected height 3152&nbsp;px.</li>
+  <li><a href="fixed-in-transform.html">fixed-in-transform.html</a> &mdash; a
+      <code>position: fixed</code> element inside a transformed ancestor. It scrolls
+      with the page and must <em>not</em> be hidden. Expected height 3000&nbsp;px.</li>
+  <li><a href="scroll-snap.html">scroll-snap.html</a> &mdash;
+      <code>scroll-snap-type: y mandatory</code>. Must leave no gaps.
+      Expected height 3000&nbsp;px.</li>
+  <li><a href="lazy-grow.html">lazy-grow.html</a> &mdash; grows during the
+      pre-pass, from 1500&nbsp;px to 4000&nbsp;px of bands.</li>
+  <li><a href="inner-scroller.html">inner-scroller.html</a> &mdash; a scrolling pane
+      inside a static shell. Must be <em>refused</em> with a message, not silently
+      mangled.</li>
+  <li><a href="overlay.html">overlay.html</a> &mdash; full-screen cookie scrim.
+      Exercises the keep/strip overlay option. Expected height 2500&nbsp;px.</li>
+  <li><a href="entropy.html">entropy.html</a> &mdash; near-incompressible noise,
+      to push a frame toward the 64&nbsp;MiB messaging ceiling.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: mandatory y scroll snap</title>
+<link rel="stylesheet" href="fixture.css">
+<style>
+  /* Mandatory snap applies to programmatic scrollTo(). Without
+     `scroll-snap-type: none` during capture, a request for y=800 can land at
+     y=1000 and leave a 200px hole that no amount of "draw where you landed"
+     repairs. */
+  html { scroll-snap-type: y mandatory; }
+  .snap { scroll-snap-align: start; scroll-snap-stop: always; }
+</style>
+</head>
+<body>
+<div id="main"></div>
+<script type="module">
+  import { bands } from './fixture.js';
+  const main = document.getElementById('main');
+  for (let s = 0; s < 6; s += 1) {
+    const sec = document.createElement('section');
+    sec.className = 'snap';
+    main.appendChild(sec);
+    bands(sec, 5, s * 5);
+  }
+  document.title = 'scroll-snap | expected height 3000';
+</script>
+</body>
+</html>

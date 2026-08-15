@@ -1,0 +1,27 @@
+<!--
+  fullpage-shot tile, small variant. Rasterised to tile32 and tile16.
+
+  Same three shapes as tile.svg with the text lines removed and everything else
+  enlarged. At 16 pixels a 5px text line is a grey smear and the arrow is the
+  only thing carrying meaning, so the arrow gets the space the text was using.
+
+  Drawn on the same 128 grid so the two files can be compared shape for shape.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <clipPath id="frame-sm">
+      <rect x="0" y="0" width="128" height="128" rx="26" ry="26" />
+    </clipPath>
+  </defs>
+
+  <rect x="0" y="0" width="128" height="128" rx="26" ry="26" fill="#171B2B" />
+
+  <g clip-path="url(#frame-sm)">
+    <rect x="26" y="-8" width="76" height="144" rx="4" ry="4" fill="#F4F6FB" />
+
+    <g fill="#4C8DFF">
+      <rect x="54" y="26" width="20" height="40" />
+      <path d="M38 60 H90 L64 100 Z" />
+    </g>
+  </g>
+</svg>

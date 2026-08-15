@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: inner scroller with a static shell (must be refused)</title>
+<link rel="stylesheet" href="fixture.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  .shell { display: grid; grid-template-columns: 240px 1fr;
+           grid-template-rows: 56px 1fr; height: 100%; }
+  .topbar { background: #1f2430; color: #fff; grid-column: 1 / -1;
+            font: 600 16px/56px sans-serif; padding: 0 20px; }
+  .side { background: #f2f4f7; border-right: 1px solid #ccc;
+          font: 400 14px/2 sans-serif; padding: 16px; }
+  .pane { overflow-y: auto; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">static shell &mdash; the scroller does not fill the window</div>
+  <nav class="side">sidebar</nav>
+  <div class="pane" id="pane"></div>
+</div>
+<script type="module">
+  import { bands } from './fixture.js';
+  bands(document.getElementById('pane'), 30);
+  document.title = 'inner-scroller | expected: refused with a message';
+</script>
+</body>
+</html>

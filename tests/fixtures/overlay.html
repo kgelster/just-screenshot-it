@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: full-screen cookie overlay</title>
+<link rel="stylesheet" href="fixture.css">
+<style>
+  .scrim { background: rgba(15,20,30,.55); inset: 0; position: fixed; z-index: 90; }
+  .cookie {
+    background: #fff; border-radius: 8px; box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    font: 400 15px/1.5 sans-serif; left: 50%; max-width: 460px; padding: 24px;
+    position: fixed; top: 50%; transform: translate(-50%, -50%); z-index: 91;
+  }
+</style>
+</head>
+<body>
+<div class="scrim"></div>
+<div class="cookie">
+  <strong>Cookies</strong>
+  <p>Keep policy: this appears once, in the frame it naturally occupies.
+     Strip policy: it is hidden from every frame.</p>
+</div>
+<div id="main"></div>
+<script type="module">
+  import { bands } from './fixture.js';
+  bands(document.getElementById('main'), 25);
+  document.title = 'overlay | expected height 2500';
+</script>
+</body>
+</html>

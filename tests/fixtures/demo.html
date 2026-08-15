@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Northbound Coffee — Roasting Notes</title>
+    <!--
+      A plausible-looking page for store screenshots and README images.
+
+      Deliberately entirely our own content: a store listing that screenshots a
+      third party's website ships their branding in our marketing. It has the
+      three things that make a full-page capture worth looking at — a sticky
+      header, content well past one viewport, and a sticky footer bar — so the
+      "one image, whole page" claim is visible rather than asserted.
+    -->
+    <style>
+      :root {
+        --ink: #17211b;
+        --muted: #5c6b62;
+        --line: #dfe6e1;
+        --paper: #ffffff;
+        --wash: #f3f6f4;
+        --accent: #1f6f4a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--wash);
+        color: var(--ink);
+        font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      }
+      header {
+        position: sticky; top: 0; z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 24px; padding: 14px 32px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.2px; }
+      .dot { width: 22px; height: 22px; border-radius: 7px; background: var(--accent); }
+      nav { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+      .cta {
+        padding: 8px 16px; border-radius: 8px; background: var(--accent);
+        color: #fff; font-size: 14px; font-weight: 600;
+      }
+      main { max-width: 760px; margin: 0 auto; padding: 56px 32px 120px; }
+      .hero { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 40px; }
+      h1 { margin: 0 0 12px; font-size: 40px; line-height: 1.15; letter-spacing: -1px; }
+      .lede { margin: 0; font-size: 19px; color: var(--muted); }
+      h2 { margin: 48px 0 12px; font-size: 24px; letter-spacing: -0.4px; }
+      p { margin: 0 0 18px; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+      .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+      .card b { display: block; font-size: 26px; letter-spacing: -0.5px; }
+      .card span { font-size: 13px; color: var(--muted); }
+      table { width: 100%; border-collapse: collapse; margin: 20px 0 8px; background: var(--paper); }
+      th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 15px; }
+      th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
+      blockquote {
+        margin: 28px 0; padding: 20px 24px; border-left: 3px solid var(--accent);
+        background: var(--paper); font-size: 18px;
+      }
+      .bar {
+        position: sticky; bottom: 0; z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 32px; background: var(--ink); color: #fff; font-size: 14px;
+      }
+      .bar .cta { background: #fff; color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand"><div class="dot"></div> Northbound Coffee</div>
+      <nav><span>Roasts</span><span>Subscriptions</span><span>Wholesale</span><span>Journal</span></nav>
+      <div class="cta">Order</div>
+    </header>
+
+    <main>
+      <div class="hero">
+        <h1>What changed when we stopped roasting to a curve</h1>
+        <p class="lede">
+          Three years of logs, one uncomfortable conclusion, and the batch that
+          finally made the argument for us.
+        </p>
+      </div>
+
+      <h2>The short version</h2>
+      <p>
+        We had been chasing a reference profile for so long that nobody could say
+        what it was for. It described a bean we no longer bought, on a machine we
+        had replaced, for a grind we had stopped recommending. Every batch was
+        measured against it and every deviation was treated as a defect.
+      </p>
+      <div class="grid">
+        <div class="card"><b>412</b><span>batches logged</span></div>
+        <div class="card"><b>-19%</b><span>development time</span></div>
+        <div class="card"><b>2.1×</b><span>repeat orders</span></div>
+      </div>
+      <p>
+        The change was not a new curve. It was dropping the idea that one curve
+        should survive a change of bean, and writing down what we actually
+        tasted instead of what we expected to.
+      </p>
+
+      <h2>What the logs said</h2>
+      <p>
+        Once we sorted by cup score rather than by adherence, the pattern was
+        immediate and slightly embarrassing. The batches people reordered were
+        the ones that had drifted.
+      </p>
+      <table>
+        <tr><th>Origin</th><th>Drop temp</th><th>Development</th><th>Cup</th></tr>
+        <tr><td>Yirgacheffe, washed</td><td>198 °C</td><td>1:42</td><td>87.5</td></tr>
+        <tr><td>Huila, honey</td><td>203 °C</td><td>2:05</td><td>86.0</td></tr>
+        <tr><td>Nyeri AA</td><td>201 °C</td><td>1:58</td><td>88.25</td></tr>
+        <tr><td>Antigua, washed</td><td>199 °C</td><td>1:47</td><td>85.5</td></tr>
+        <tr><td>Sidama, natural</td><td>196 °C</td><td>2:12</td><td>89.0</td></tr>
+      </table>
+
+      <blockquote>
+        “The profile was never the product. It was a record of one good morning
+        that we kept re-enacting.”
+      </blockquote>
+
+      <h2>How we roast now</h2>
+      <p>
+        Each origin gets its own target and its own stopping rule, written before
+        the first batch and revised only against the cupping table. Nothing is
+        compared to last year. The log is a diary, not a contract.
+      </p>
+      <p>
+        The part that took longest was cultural rather than technical: agreeing
+        that a batch which tastes better but reads worse is a better batch. That
+        sentence is easy to write and hard to sign off on at 6am with a roaster
+        already at charge temperature.
+      </p>
+
+      <h2>What we would do differently</h2>
+      <p>
+        Start with the cupping table. We spent two of the three years collecting
+        data against a question nobody had asked, and the answer only appeared
+        once we changed the question.
+      </p>
+      <p>
+        And keep the logs public. Half the value turned out to be wholesale
+        customers reading them and telling us which batches they wanted again,
+        which is not information a curve can carry.
+      </p>
+    </main>
+
+    <div class="bar">
+      <span>Subscribe to the journal — one letter a month, no tasting notes as adjectives.</span>
+      <div class="cta">Sign up</div>
+    </div>
+  </body>
+</html>

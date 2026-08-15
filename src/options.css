@@ -1,0 +1,593 @@
+/*
+  fullpage-shot settings.
+
+  Deliberately not an imitation of Chrome's own settings UI. An extension page
+  cannot use Chrome's control language, so "native" in practice means
+  "unstyled", which is the thing this replaces. It looks like the product's
+  icon instead: #171B2B ground, #F4F6FB page, #4C8DFF accent.
+
+  Every custom control is a real form element underneath. The switches are
+  checkboxes with `appearance: none`, the segmented control is two radios, and
+  nothing here invents an ARIA widget.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-subtle: #f7f9fc;
+  --text: #171b2b;
+  --muted: #667085;
+  /* --border draws dividers and card edges, which are decoration. Anything
+     that is the visible boundary of a control uses --border-strong, which is
+     picked to clear 3:1 against the surface behind it: 3.61:1 in light,
+     3.32:1 in dark. A hairline that only looks tidy is not good enough when
+     it is the only thing saying "this is a text field". */
+  --border: #d8deea;
+  --border-strong: #7c879f;
+  --accent: #4c8dff;
+  /* #4C8DFF measures 3.20:1 on white and fails normal-size text as body
+     copy, as a link, and as the focus ring. #1A5FD0 measures 5.85:1 on
+     white, and still clears 4.5:1 on the two tinted grounds it also lands
+     on: 5.60:1 on --surface-subtle, 5.16:1 on --accent-wash. #266DEB, the
+     obvious first pick, passes on white at 4.71:1 and then fails on both of
+     those at 4.45 and 4.14. */
+  --accent-strong: #1a5fd0;
+  --accent-wash: #eaf1ff;
+  --danger: #b42318;
+  --danger-wash: #fef3f2;
+  --warn: #8a5a00;
+  --warn-wash: #fff8e6;
+  --warn-border: #e8cf9a;
+  --switch-off: #cbd3e1;
+  --shadow: 0 1px 2px rgba(23, 27, 43, 0.06), 0 1px 3px rgba(23, 27, 43, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #10131e;
+    --surface: #171b2b;
+    --surface-subtle: #202638;
+    --text: #f4f6fb;
+    --muted: #aeb8cc;
+    --border: #343c52;
+    --border-strong: #626d8c;
+    --accent: #4c8dff;
+    --accent-strong: #70a4ff;
+    --accent-wash: #1d2a45;
+    --danger: #ff8a80;
+    --danger-wash: #2c1a1a;
+    --warn: #e8c375;
+    --warn-wash: #2a2416;
+    --warn-border: #5a4a24;
+    --switch-off: #3d465e;
+    --shadow: none;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 40px 24px 80px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+code {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.masthead {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+}
+
+.masthead__icon { border-radius: 8px; flex: none; }
+.masthead__text { flex: 1 1 auto; min-width: 0; }
+
+h1 {
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.masthead__sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 2px 0 0;
+}
+
+.shortcut {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  flex: none;
+  font-size: 13px;
+  gap: 8px;
+}
+
+kbd {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  color: var(--text);
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: 5px 7px;
+}
+
+.shortcut__link {
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font: inherit;
+  padding: 4px;
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ status */
+
+/* Always in the DOM so the live region is announced rather than inserted. */
+.status {
+  color: var(--muted);
+  font-size: 13px;
+  margin: -16px 0 0;
+  min-height: 20px;
+  transition: opacity 0.15s;
+}
+
+.status:empty { opacity: 0; }
+.status.is-error { color: var(--danger); font-weight: 600; }
+
+/* ------------------------------------------------------------------- cards */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.card__title {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  margin: 0 0 16px;
+}
+
+/* -------------------------------------------------------------------- rows */
+
+.rows > * + * { border-top: 1px solid var(--border); }
+
+.row {
+  align-items: center;
+  column-gap: 24px;
+  display: grid;
+  grid-template-areas: "label control" "desc control";
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 64px;
+  padding: 14px 0;
+}
+
+.row__label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  grid-area: label;
+  margin: 0;
+}
+
+.row__desc {
+  color: var(--muted);
+  font-size: 13px;
+  grid-area: desc;
+  margin: 3px 0 0;
+  max-width: 46ch;
+}
+
+/* No description: the label should sit centred, not pinned to the first row. */
+.row:not(:has(.row__desc)) { grid-template-areas: "label control"; }
+
+.row__control {
+  align-self: center;
+  grid-area: control;
+  justify-self: end;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-areas: "label" "desc" "control";
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+  .row__control { justify-self: start; }
+  .row:not(:has(.row__desc)) { grid-template-areas: "label" "control"; }
+}
+
+/* --------------------------------------------------------------- switches */
+
+/* The 44px-tall wrapper is the hit target; the 44x26 track is the drawing. */
+.switchbox {
+  cursor: pointer;
+  display: inline-flex;
+  padding: 9px 0;
+}
+
+/* The 1px border is not decoration. A switch is a non-text UI component, so
+   its track needs 3:1 against the surface behind it; the fill alone (#CBD3E1
+   on white, 1.54:1) does not get there and --muted does. */
+.switch {
+  appearance: none;
+  background: var(--switch-off);
+  border: 1px solid var(--muted);
+  border-radius: 13px;
+  cursor: pointer;
+  flex: none;
+  height: 26px;
+  margin: 0;
+  position: relative;
+  transition: background-color 0.15s ease;
+  width: 44px;
+}
+
+.switch::after {
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(23, 27, 43, 0.35);
+  content: "";
+  height: 20px;
+  left: 2px;
+  position: absolute;
+  top: 2px;
+  transition: transform 0.15s ease;
+  width: 20px;
+}
+
+.switch:checked { background: var(--accent-strong); border-color: var(--accent-strong); }
+.switch:checked::after { transform: translateX(18px); }
+
+/* ----------------------------------------------------- segmented control */
+
+.seg {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+}
+
+.seg__opt { cursor: pointer; display: block; }
+
+.seg__opt input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.seg__opt span {
+  border-radius: 6px;
+  color: var(--muted);
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  transition: background-color 0.12s, color 0.12s;
+}
+
+.seg__opt input:checked + span {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+/* --------------------------------------------------- inputs and selects */
+
+.select,
+.num,
+.composer__input {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+  padding: 9px 11px;
+}
+
+.select { min-width: 200px; padding-right: 8px; }
+
+.field { align-items: center; display: inline-flex; gap: 8px; }
+.field__unit { color: var(--muted); font-size: 13px; }
+.num { text-align: right; width: 100px; }
+.num.is-invalid { border-color: var(--danger); }
+
+/* ------------------------------------------------------------------ slider */
+
+.slider { align-items: center; display: flex; gap: 12px; }
+.slider__input { accent-color: var(--accent-strong); width: 180px; }
+
+.slider__value {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- composer */
+
+.composer {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  padding: 18px;
+}
+
+.composer__label { display: block; font-size: 14px; font-weight: 600; }
+.composer__desc { color: var(--muted); font-size: 13px; margin: 3px 0 12px; }
+
+.composer__input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  height: 44px;
+  width: 100%;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.preset {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  font: 600 12px/1 inherit;
+  padding: 8px 14px;
+}
+
+.preset:hover { border-color: var(--accent); color: var(--text); }
+
+.preset[aria-pressed="true"] {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.chips {
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.chipgroup { align-items: baseline; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.chipgroup__label {
+  color: var(--muted);
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: 92px;
+}
+
+/* Narrow: the heading takes the whole line so the chips wrap as one block
+   instead of flowing around a 92px gutter. */
+@media (max-width: 640px) {
+  .chipgroup__label { width: 100%; }
+}
+
+.chip {
+  align-items: baseline;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px 9px;
+}
+
+.chip:hover { border-color: var(--accent); }
+
+.chip__key {
+  color: var(--accent-strong);
+  font: 600 12px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* The resolved value is visible text, not a tooltip: a title attribute is
+   unreachable by keyboard and unreadable on the way to clicking the chip. */
+.chip__val {
+  color: var(--muted);
+  font-size: 11px;
+  max-width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- preview */
+
+.preview {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-top: 16px;
+  overflow-wrap: anywhere;
+}
+
+.preview__dir { color: var(--muted); font-size: 12px; }
+.preview__name { color: var(--text); font-size: 14px; font-weight: 600; }
+.preview__ext { color: var(--accent-strong); font-size: 14px; font-weight: 600; }
+
+/* ----------------------------------------------------------- last capture */
+
+.lastcapture {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+  padding-top: 14px;
+}
+
+.lastcapture[hidden] { display: none; }
+
+.lastcapture code {
+  background: none;
+  border: 0;
+  color: var(--text);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  padding: 0;
+}
+
+.lastcapture.is-bad { color: var(--danger); }
+.lastcapture.is-bad code { color: var(--danger); }
+
+/* ----------------------------------------------------------------- notices */
+
+/* Icon plus text, never colour alone. */
+.notice {
+  align-items: flex-start;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+}
+
+/* An author `display` beats the UA rule behind the `hidden` attribute, so the
+   attribute has to be honoured explicitly or every notice is always visible. */
+.notice[hidden] { display: none; }
+
+.notice--warn {
+  background: var(--warn-wash);
+  border-color: var(--warn-border);
+  color: var(--warn);
+}
+
+.notice__icon {
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  height: 16px;
+  line-height: 13px;
+  text-align: center;
+  width: 16px;
+}
+
+/* ---------------------------------------------------------------- advanced */
+
+.adv { border-top: 1px solid var(--border); margin-top: 8px; }
+
+.adv__summary {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  list-style: none;
+  padding: 14px 0 14px 20px;
+  position: relative;
+  user-select: none;
+}
+
+.adv__summary::-webkit-details-marker { display: none; }
+
+.adv__summary::before {
+  border-left: 5px solid currentColor;
+  border-bottom: 4px solid transparent;
+  border-top: 4px solid transparent;
+  content: "";
+  left: 4px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.15s;
+}
+
+.adv[open] .adv__summary::before { transform: translateY(-50%) rotate(90deg); }
+.adv[open] .adv__summary { color: var(--text); }
+.adv .rows { border-top: 1px solid var(--border); }
+
+/* ------------------------------------------------------------------ footer */
+
+.footer { display: flex; gap: 12px; }
+
+.btn {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font: 600 14px/1 inherit;
+  padding: 12px 18px;
+}
+
+.btn:hover { border-color: var(--border-strong); background: var(--surface-subtle); }
+
+.btn.is-armed {
+  background: var(--danger-wash);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ------------------------------------------------------------------- focus */
+
+/* The ring is --accent-strong, not --accent: a focus indicator needs 3:1
+   against what is behind it, and #4C8DFF on the page background measures
+   2.96:1. */
+:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.seg__opt input:focus-visible + span {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

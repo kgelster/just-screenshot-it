@@ -1,0 +1,62 @@
+<!--
+  fullpage-shot toolbar glyph, detailed variant. Rasterised to 128 and 48.
+
+  This is the mark for `action.default_icon` — the toolbar button. It is line
+  art on a transparent ground, unlike tile.svg, which keeps its own dark
+  square for chrome://extensions and the permission dialogs.
+
+  WHY ONE DRAWING AND NOT TWO
+
+  The obvious answer to a light and a dark toolbar is two icon sets and a
+  runtime `chrome.action.setIcon()` swap. It does not work. The only signal an
+  extension can read is `prefers-color-scheme`, which reports the browser and
+  OS colour preference, not the colour Chrome paints the toolbar. A custom
+  Chrome theme, or Appearance set independently of the OS, makes the two
+  disagree, and there is no API for the actual toolbar colour. A detector that
+  cannot observe the thing it claims to observe is worse than no detector,
+  because it is confidently wrong. Declarative theme-variant action icons were
+  proposed for the manifest and never shipped.
+
+  So the drawing survives any toolbar colour on its own.
+
+  HOW
+
+  Every colour here sits inside the luminance band that clears 3:1 against
+  both Chrome toolbars, light (#F1F3F4, L=0.893) and dark (#292A2D, L=0.024).
+  That band is L in [0.172, 0.265]:
+
+    #6B7A99  L=0.194   3.87:1 on light   3.29:1 on dark   page outline
+    #3A7DF5  L=0.222   3.47:1 on light   3.67:1 on dark   arrow
+
+  #4C8DFF, the product accent, measures L=0.275 and lands just outside the
+  band at 2.99:1 on a light toolbar, so the arrow uses the slightly deeper
+  #3A7DF5. It is the same blue to look at and it clears the bar.
+
+  Outline and arrow are close in luminance to each other, which is fine: they
+  never touch, and weight tells them apart — a thin stroke against a solid
+  fill. Colour is not carrying that distinction.
+
+  The service worker overlays a progress badge on the lower-right corner of
+  this icon, so the lower right is kept clear of anything load-bearing.
+
+  See glyph-small.svg for the 32 and 16 variant.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- The page. Stroke is centred on the path, so the outer edge is at 17.5. -->
+  <rect
+    x="22" y="10" width="84" height="108" rx="12" ry="12"
+    fill="none" stroke="#6B7A99" stroke-width="9"
+  />
+
+  <!-- Two text lines, top only. The arrow needs clear paper under it. -->
+  <g fill="#6B7A99">
+    <rect x="40" y="28" width="48" height="8" rx="4" />
+    <rect x="40" y="43" width="34" height="8" rx="4" />
+  </g>
+
+  <!-- Solid, so weight rather than hue separates it from the outline. -->
+  <g fill="#3A7DF5">
+    <rect x="56" y="58" width="16" height="28" />
+    <path d="M41 79 H87 L64 107 Z" />
+  </g>
+</svg>

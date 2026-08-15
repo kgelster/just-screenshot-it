@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: high-entropy canvas (exercises the frame size guard)</title>
+<link rel="stylesheet" href="fixture.css">
+<style> canvas { display: block; } </style>
+</head>
+<body>
+<p class="note">
+  Deterministic pseudo-random noise. PNG frames of this page are near
+  incompressible, which is what pushes a retina viewport toward the 64&nbsp;MiB
+  extension-messaging ceiling and triggers the JPEG fallback.
+</p>
+<div id="main"></div>
+<script type="module">
+  const main = document.getElementById('main');
+  let seed = 1234567;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  for (let i = 0; i < 12; i += 1) {
+    const c = document.createElement('canvas');
+    c.width = 1600; c.height = 400;
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(1600, 400);
+    for (let p = 0; p < img.data.length; p += 4) {
+      img.data[p] = rnd() * 255;
+      img.data[p + 1] = rnd() * 255;
+      img.data[p + 2] = rnd() * 255;
+      img.data[p + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 220, 48);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 28px sans-serif';
+    ctx.fillText(`tile ${i}`, 16, 34);
+    main.appendChild(c);
+  }
+  document.title = 'entropy | 12 tiles of 400px';
+</script>
+</body>
+</html>

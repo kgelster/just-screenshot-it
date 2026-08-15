@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: sticky header, sticky footer, sticky section</title>
+<link rel="stylesheet" href="fixture.css">
+<style>
+  header {
+    background: #1f2430; color: #fff; height: 60px; line-height: 60px;
+    padding: 0 24px; position: sticky; top: 0; z-index: 50;
+  }
+  footer {
+    background: #143; color: #fff; height: 48px; line-height: 48px;
+    padding: 0 24px; position: sticky; bottom: 0; z-index: 50;
+  }
+  /* A sticky section that establishes a containing block for an absolutely
+     positioned child. Demoting this to `static` would move the badge. */
+  .sticky-section {
+    background: #4c9fff; color: #fff; height: 44px; line-height: 44px;
+    padding: 0 24px; position: sticky; top: 60px; z-index: 40;
+  }
+  .sticky-section .badge {
+    background: #fff; border-radius: 3px; color: #4c9fff; font-size: 13px;
+    line-height: 20px; padding: 0 8px; position: absolute; right: 16px; top: 12px;
+  }
+</style>
+</head>
+<body>
+<header>sticky header (60px) &mdash; must appear ONCE, at the top</header>
+<div class="sticky-section">
+  sticky section (44px, pins under the header)
+  <span class="badge">abs child</span>
+</div>
+<main id="main"></main>
+<footer>sticky footer (48px) &mdash; must appear ONCE, at the bottom</footer>
+<script type="module">
+  import { bands } from './fixture.js';
+  bands(document.getElementById('main'), 30, 0, 104);
+  // 60 + 44 + 3000 + 48 = 3152
+  document.title = 'sticky | expected height 3152';
+</script>
+</body>
+</html>
