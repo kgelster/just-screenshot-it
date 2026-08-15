@@ -484,6 +484,26 @@ Also worth doing by hand: switch tabs mid-capture (must abort with a red `!`
 badge, not blend two pages), and capture the same page twice in a row (must not
 double-register the injected listener).
 
+## Repository
+
+Public at **<https://github.com/kgelster/just-screenshot-it>**, MIT licensed.
+
+That repository is a separate copy, not a subtree of the workspace this was
+built in: the earlier history carries notes about the machine it was developed
+on, so it was published as one fresh commit rather than a `git subtree` split.
+Sync it by mirroring the working tree, which keeps its own history:
+
+```
+rsync -a --delete \
+  --exclude node_modules --exclude dist --exclude .git --exclude .DS_Store \
+  ./ /path/to/just-screenshot-it/
+cd /path/to/just-screenshot-it && git add -A && git commit && git push
+```
+
+Its remote must be **HTTPS**. This machine's default SSH key authenticates as a
+different GitHub account, so an SSH remote on a `kgelster/*` repo is refused.
+Commits use the account's noreply address rather than a real one.
+
 ## Files
 
 | Path | What it is |
@@ -500,7 +520,13 @@ double-register the injected listener).
 | `icons/glyph.svg`, `icons/glyph-small.svg` | toolbar mark. Line art on a transparent ground |
 | `icons/tile.svg`, `icons/tile-small.svg` | the filled square, for the manifest `icons` key |
 | `icons/build-icons.sh` | rasterises all four SVGs with `rsvg-convert`, then verifies size and alpha |
-| `docs/` | external review reports (see `codex-review-2026-08-14.md`) |
+| `docs/codex-review-2026-08-14.md` | external review report and its resolution table |
+| `docs/store-listing.md` | every field the Chrome Web Store dashboard asks for |
+| `assets/promo-tile.svg` | source for the 440x280 store promo tile |
+| `scripts/package.sh` | builds the store ZIP, and refuses if it finds a network API |
+| `scripts/store-assets.sh`, `scripts/store-shots.mjs` | store screenshots, generated from a real capture |
+| `scripts/verify-package.mjs` | loads the built ZIP in Chrome and captures with it |
+| `LICENSE`, `PRIVACY.md` | MIT; the privacy policy the store listing points at |
 | `tests/plan.test.js`, `tests/filename.test.js`, `tests/settings.test.js` | `node --test` |
 | `tests/e2e/` | real-Chrome suite: CDP driver, shared fixtures, naming and lifecycle tests |
 | `tests/fixtures/` | deterministic capture targets |
