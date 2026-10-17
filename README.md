@@ -214,7 +214,7 @@ npm run test:e2e          # ~160s, needs Chrome; CHROME_PATH overrides the path
 
 | File | Covers |
 |---|---|
-| `download-naming.test.js` | the file lands under the templated name with a rival downloads extension installed, an idle capture extension leaves other extensions' filenames alone, and the decision table above |
+| `download-naming.test.js` | the file lands under the templated name with a rival downloads extension installed, an idle capture extension leaves other extensions' filenames alone, and the [decision table](docs/design-notes.md#why-naming-a-download-is-harder-than-it-looks) in the design notes |
 | `capture-lifecycle.test.js` | three captures in a row all succeed and each returns the worker to idle, plus the offscreen-document facts in [Why the clipboard is the awkward part](docs/design-notes.md#why-the-clipboard-is-the-awkward-part) |
 | `chrome.js` | dependency-free CDP driver |
 | `fixture.js` | throwaway workspace, the instrumented extension copy, the static server |
